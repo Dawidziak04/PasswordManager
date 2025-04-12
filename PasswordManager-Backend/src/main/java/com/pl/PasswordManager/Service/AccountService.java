@@ -20,7 +20,7 @@ public List<Account> getAccountsByAppUserID(int appUserID) {
     //      We dont need verification if user exists, because we
     //                       cant create an account if we are not an app user
     //                                          but you can add up if you need to
-    return accountRepository.findByAppUserID(appUserID);
+    return accountRepository.findByappUserID(appUserID);
 }
 
 public Account addAccount(Account account) {
