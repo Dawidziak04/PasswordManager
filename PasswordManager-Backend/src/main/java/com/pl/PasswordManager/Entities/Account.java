@@ -1,11 +1,13 @@
 package com.pl.PasswordManager.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "accounts")
 @Getter
@@ -15,12 +17,14 @@ import lombok.Setter;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int accountId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int accountID;
 
-    @JoinColumn(referencedColumnName = "customerID", nullable = false)
-    private int accountUserID;
+    @ManyToOne
+    @JoinColumn(name = "app_user_id", referencedColumnName = "appUserID", nullable = false)
+    private AppUser appUserProfileID;
 
+    @Column(nullable = false)
     private String accountName;
     private String accountEmail;
     private String accountPassword;

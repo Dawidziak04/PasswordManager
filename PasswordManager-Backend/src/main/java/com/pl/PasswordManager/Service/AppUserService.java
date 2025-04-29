@@ -18,8 +18,21 @@ public class AppUserService {
     }
 
     public AppUser register(AppUser appUser) {
+        if (appUserRepository.findByUsername(appUser.getUsername()) != null) {
+            throw new RuntimeException("Username already exists");
+        }
+
     appUser.setPassword(encoder.encode(appUser.getPassword()));
     return appUserRepository.save(appUser);
 }
+
+    public boolean deleteAppUser(AppUser appUser) {
+        if (appUserRepository.existsById(appUser.getAppUserID())) {
+            appUserRepository.delete(appUser);
+            return true;
+        }
+        return false;
+
+    }
 
 }

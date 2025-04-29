@@ -3,7 +3,6 @@ package com.pl.PasswordManager.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -20,12 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfiguration {
 
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
 
+    @Bean
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .securityMatcher("/api/*")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
@@ -34,22 +31,22 @@ public class SpringSecurityConfiguration {
                 .build();
     }
 
-    @Bean
-    @Order(2)
-    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception{
-        return http
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers("/CSS/**", "/JS/**").permitAll()
-                                .anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login"))
-                    //    .defaultSuccessUrl("/OrderManagement.html", true).permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .build();
-
-
-    }
+//    @Bean
+//    @Order(2)
+//    public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception{
+//        return http
+//                .authorizeHttpRequests(request ->
+//                        request.requestMatchers("/CSS/**", "/JS/**").permitAll()
+//                                .anyRequest().authenticated())
+//                .formLogin(form -> form.loginPage("/login"))
+//                    //    .defaultSuccessUrl("/OrderManagement.html", true).permitAll())
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .sessionManagement(session ->
+//                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+//                .build();
+//
+//
+//    }
 
 
     @Bean
