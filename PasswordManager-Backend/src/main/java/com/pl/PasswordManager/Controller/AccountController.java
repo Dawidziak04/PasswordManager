@@ -1,6 +1,7 @@
 package com.pl.PasswordManager.Controller;
 
 
+import com.pl.PasswordManager.Auth.LoginRequired;
 import com.pl.PasswordManager.Entities.Account;
 import com.pl.PasswordManager.Service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,16 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+
+    @LoginRequired
     @GetMapping("/getAccountsByAppUser/{appUserId}")
     public ResponseEntity<List<Account>> getAccountsByAppUser(@PathVariable int appUserId) {
-        List<Account> dbAccount = accountService.getAccountsByAppUserID(appUserId);
+        List<Account> dbAccount;
+        try {
+            dbAccount = accountService.getAccountsByAppUserID(appUserId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         if (dbAccount == null || Objects.requireNonNull(dbAccount).isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -34,20 +42,27 @@ public class AccountController {
 
     }
 
+    @LoginRequired
     @PostMapping("/addAccount")
-    public ResponseEntity<Account> addAccount(@RequestBody Account account) {
-        return ResponseEntity.ok(accountService.addAccount(account));
+    public ResponseEntity<Account> addAccount(@RequestBody Account account) throws Exception {
+        try {
+            return ResponseEntity.ok(accountService.addAccount(account));
+        } catch (Exception e) {
+            throw new Exception("Server error");
+        }
     }
 
+    @LoginRequired
     @DeleteMapping("/deleteAccount")
     public ResponseEntity<String> deleteAccount(@RequestBody Account account) {
-            if (accountService.deleteAccount(account)) {
-                return ResponseEntity.ok("Account: " + account.getAccountName() + " deleted successfully");
-            }
-            else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account: " + account.getAccountName() + "not found");
-            }
+        if (accountService.deleteAccount(account)) {
+            return ResponseEntity.ok("Account: " + account.getAccountName() + " deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account: " + account.getAccountName() + "not found");
         }
+    }
+
+    @LoginRequired
     @PutMapping
     public ResponseEntity<Account> updateAccount(@RequestBody Account account) {
         if (account.getAccountName() == null ||
@@ -55,7 +70,14 @@ public class AccountController {
                 account.getAccountPassword() == null) {
             return ResponseEntity.badRequest().body(null);
         }
-        Account updatedAccount = accountService.updateAccount(account);
+        Account updatedAccount;
+
+        try {
+            updatedAccount = accountService.updateAccount(account);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         if (updatedAccount != null) {
             return ResponseEntity.ok(updatedAccount);
         }
