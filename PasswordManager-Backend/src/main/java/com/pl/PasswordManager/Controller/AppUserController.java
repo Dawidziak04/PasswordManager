@@ -20,11 +20,16 @@ public class AppUserController {
     private final AppUserService appUserService;
     private final AppUserRepository appUserRepository;
 
-    
     @PostMapping("/register")
-    public ResponseEntity<AppUser> register(@RequestBody AppUser appUser) {
+    public ResponseEntity<AppUser> register(@RequestBody AppUser appUser) throws IllegalStateException {
         if (appUserRepository.existsByUsername(appUser.getUsername())) {
             throw new IllegalStateException("Username already exists");
+        }
+        if (appUser.getPassword().length() < 6) {
+            throw new IllegalStateException("Password must be at least 6 characters");
+        }
+        if (appUser.getUsername().isEmpty()) {
+            throw new IllegalStateException("Username cannot be empty");
         }
         return ResponseEntity.ok(appUserService.register(appUser));
     }
@@ -40,9 +45,11 @@ public class AppUserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AppUser appUser) throws IllegalAccessException {
-        System.out.println("AppUserController login: " + appUser.getUsername());
         try {
             String token = appUserService.verify(appUser);
+            if (token == null) {
+                throw new IllegalAccessException("Bad token");
+            }
             return ResponseEntity.ok(Map.of("token", token));
         } catch (AuthenticationException e) {
             throw new IllegalAccessException("Incorrect username or password");

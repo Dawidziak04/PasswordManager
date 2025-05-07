@@ -11,6 +11,7 @@ import java.util.Random;
 public class PasswordGeneratorService {
 
     public String generatePassword(GeneratedPassword generatedPassword) throws IllegalArgumentException {
+
         Random random = new Random();
         List<Character> lowercaseLetters = List.of(
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
