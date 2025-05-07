@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    //Value do tego klucz 256bit
-    private final String secretKey;
-
-    public JwtService() throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-        SecretKey key = keyGen.generateKey();
-        secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
-    }
+    @Value("${jwt-secret-key}")
+    private String secretKey;
 
     public String generateToken(AppUser appUser) {
 

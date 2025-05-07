@@ -1,0 +1,9 @@
+azure:
+  keyvault:
+    secret:
+      property-sources:
+        - endpoint: https://mykeyillia.vault.azure.net/
+  client:
+    client-id: 0edfbb7b-a551-416b-a1cb-095cf736419f
+    client-secret: rWx8Q~no3ghHlW6psE_ijAk948UJEN2dxsN4dbQg
+    tenant-id: 81039691-50f4-455c-b225-6a46e6efc240
