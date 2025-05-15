@@ -64,7 +64,7 @@ public class AccountController {
     }
 
     @LoginRequired
-    @PutMapping
+    @PutMapping("/updateAccount")
     public ResponseEntity<Account> updateAccount(@RequestBody Account account) {
         if (account.getAccountName() == null ||
                 account.getAccountEmail() == null ||
