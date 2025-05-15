@@ -23,11 +23,12 @@ public class AccountController {
 
 
     @LoginRequired
-    @GetMapping("/getAccountsByAppUser/{appUserId}")
-    public ResponseEntity<List<Account>> getAccountsByAppUser(@PathVariable int appUserId) {
+    @GetMapping("/getAccountsByAppUserId/{appUserID}")
+    public ResponseEntity<List<Account>> getAccountsByAppUser(@PathVariable int appUserID) {
+        System.out.println(appUserID);
         List<Account> dbAccount;
         try {
-            dbAccount = accountService.getAccountsByAppUserID(appUserId);
+            dbAccount = accountService.getAccountsByAppUserID(appUserID);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

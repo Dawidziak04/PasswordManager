@@ -22,7 +22,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final AppUserRepository appUserRepository;
-    private final AwtService awtService;
+    private final AesService aesService;
 
 
 public List<Account> getAccountsByAppUserID(int appUserID) {
@@ -32,7 +32,7 @@ public List<Account> getAccountsByAppUserID(int appUserID) {
         accounts.parallelStream().forEach(account -> {
             String decryptedPassword;
             try {
-                decryptedPassword = awtService.decryptPassword(account.getAccountPassword());
+                decryptedPassword = aesService.decryptPassword(account.getAccountPassword());
             } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException |
                      NoSuchPaddingException e) {
                 throw new RuntimeException(e);
@@ -44,7 +44,7 @@ public List<Account> getAccountsByAppUserID(int appUserID) {
 
 public Account addAccount(Account account) throws Exception {
     try {
-        account.setAccountPassword(awtService.encryptPassword(account.getAccountPassword()));
+        account.setAccountPassword(aesService.encryptPassword(account.getAccountPassword()));
     } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
              BadPaddingException e) {
         throw new Exception("Server error");
@@ -67,17 +67,20 @@ public Account updateAccount(Account updatedAccount) throws Exception {
     try {
     if (existingAccount.isPresent()) {
         Account accountToUpdate = existingAccount.get();
+        accountToUpdate.setAccountName(updatedAccount.getAccountName());
         accountToUpdate.setAccountID(updatedAccount.getAccountID());
         accountToUpdate.setAccountEmail(updatedAccount.getAccountEmail());
-        accountToUpdate.setAccountPassword(awtService.encryptPassword(updatedAccount.getAccountPassword()));
+        accountToUpdate.setAccountPassword(aesService.encryptPassword(updatedAccount.getAccountPassword()));
         accountRepository.save(accountToUpdate);
         return accountToUpdate;
+    }
+    else {
+        throw new IllegalArgumentException("Account not found");
     }
     } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
              BadPaddingException e) {
         throw new Exception("Server error");
     }
-    return null;
 }
 
 }

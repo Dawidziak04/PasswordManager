@@ -99,16 +99,16 @@
 			<version>5.0.0</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.azure.spring</groupId>
-			<artifactId>spring-cloud-azure-starter</artifactId>
-			<version>6.0.0-beta.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.azure</groupId>
-			<artifactId>azure-core</artifactId>
-			<version>1.55.3</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.azure.spring</groupId>-->
+<!--			<artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>-->
+<!--			<version>6.0.0-beta.4</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.azure</groupId>-->
+<!--			<artifactId>azure-core</artifactId>-->
+<!--			<version>1.55.3</version>-->
+<!--		</dependency>-->
 
 	</dependencies>
 

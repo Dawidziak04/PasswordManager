@@ -1,7 +1,6 @@
 package com.pl.PasswordManager.Service;
 
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.*;
@@ -11,29 +10,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Service
-@RequiredArgsConstructor
-public class AwtService {
+public class AesService {
 
-    //Value do tego klucz 256bit
-    private String keyAsString;
 
-    private final SecretKey recoveredKey = stringToSecretKey(keyAsString);
-
-    public String secretKeyToString(SecretKey secretKey) {
-        byte[] encodedKey = secretKey.getEncoded();
-        return Base64.getEncoder().encodeToString(encodedKey);
-    }
-
-    public SecretKey stringToSecretKey(String encodedKeyStr) {
-        byte[] decodedKey = Base64.getDecoder().decode(encodedKeyStr);
+    private SecretKey getAesKey() {
+        String keyAsString = "cZ4xrIEESUMCnEFe1T5YVszV4tg2oIvOw3UziD8FnTo=";
+        byte[] decodedKey = Base64.getDecoder().decode(keyAsString);
         return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
     }
 
-//    private SecretKey getAwtKey() throws NoSuchAlgorithmException {
-//        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-//        keyGen.init(256);
-//        return keyGen.generateKey();
-//    }
+
 
 
     public String encryptPassword(String password) throws NoSuchPaddingException,
@@ -41,7 +27,7 @@ public class AwtService {
 
         Cipher cipherEncrypt = Cipher.getInstance("AES");
 
-        cipherEncrypt.init(Cipher.ENCRYPT_MODE, recoveredKey);
+        cipherEncrypt.init(Cipher.ENCRYPT_MODE, getAesKey());
         byte [] encryptedBytes = cipherEncrypt.doFinal(password.getBytes());
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
@@ -50,7 +36,7 @@ public class AwtService {
 
         Cipher cipherDecrypt = Cipher.getInstance("AES");
 
-        cipherDecrypt.init(Cipher.DECRYPT_MODE, recoveredKey);
+        cipherDecrypt.init(Cipher.DECRYPT_MODE, getAesKey());
         byte [] decryptedBytes = cipherDecrypt.doFinal(Base64.getDecoder().decode(password));
         return new String(decryptedBytes);
 

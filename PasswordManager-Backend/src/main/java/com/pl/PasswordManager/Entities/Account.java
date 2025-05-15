@@ -1,5 +1,6 @@
 package com.pl.PasswordManager.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,10 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accountID;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "app_user_id", referencedColumnName = "appUserID", nullable = false)
     private AppUser appUserProfileID;
+
 
     @Column(nullable = false)
     private String accountName;
