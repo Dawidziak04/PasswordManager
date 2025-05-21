@@ -7,7 +7,7 @@ import { Account } from '../models/account.model';
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'api/accounts'; // Base URL for accounts API
+  private apiUrl = 'api'; // Base URL for accounts API
 
   constructor(private http: HttpClient) { }
 
