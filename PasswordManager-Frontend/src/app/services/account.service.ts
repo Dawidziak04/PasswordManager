@@ -1,29 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Account } from '../models/account.model';
+
+export interface Account {
+  accountID: number;
+  accountName: string;
+  accountEmail: string;
+  accountPassword: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'api'; // Base URL for accounts API
+  private apiUrl = 'http://localhost:8080/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAccountsByAppUser(appUserId: number): Observable<Account[]> {
-    return this.http.get<Account[]>(`${this.apiUrl}/getAccountsByAppUserId/${appUserId}`);
-  }
-
-  addAccount(account: Account): Observable<Account> {
+  addAccount(account: Omit<Account, 'accountID'>): Observable<Account> {
     return this.http.post<Account>(`${this.apiUrl}/addAccount`, account);
   }
 
-  updateAccount(account: Account): Observable<Account> {
-    return this.http.put<Account>(`${this.apiUrl}/updateAccount`, account);
+  getAccounts(): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.apiUrl}/accounts`);
   }
 
-  deleteAccount(account: Account): Observable<string> {
-    return this.http.delete<string>(`${this.apiUrl}/deleteAccount`, { body: account });
+  deleteAccount(accountId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/accounts/${accountId}`);
   }
 } 
