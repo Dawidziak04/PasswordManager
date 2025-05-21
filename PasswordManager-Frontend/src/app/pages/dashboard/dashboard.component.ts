@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PasswordGeneratorComponent } from '../../components/password-generator/password-generator.component';
+import { AddAccountComponent } from '../../components/add-account/add-account.component';
+import { AccountService, Account } from '../../services/account.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, PasswordGeneratorComponent],
+  imports: [CommonModule, RouterLink, PasswordGeneratorComponent, AddAccountComponent],
   template: `
     <div class="dashboard-container">
       <header class="dashboard-header">
@@ -22,15 +24,32 @@ import { PasswordGeneratorComponent } from '../../components/password-generator/
         <div class="password-list">
           <h2>Your Accounts</h2>
           <div class="password-actions">
-            <button class="add-account-button">Add New Account</button>
+            <button class="add-account-button" (click)="openAddAccount()">Add New Account</button>
           </div>
           <div class="password-items">
-            <!-- Account items will be displayed here -->
-            <p class="no-accounts" *ngIf="!hasAccounts">No accounts saved yet. Add your first account!</p>
+            <div *ngIf="accounts.length === 0" class="no-accounts">
+              No accounts saved yet. Add your first account!
+            </div>
+            <div *ngFor="let account of accounts" class="account-item">
+              <div class="account-info">
+                <h3>{{ account.accountName }}</h3>
+                <p>{{ account.accountEmail }}</p>
+              </div>
+              <div class="account-actions">
+                <button class="show-password-button" (click)="togglePassword(account)">
+                  {{ account.showPassword ? 'Hide' : 'Show' }} Password
+                </button>
+                <button class="delete-button" (click)="deleteAccountItem(account)">Delete</button>
+              </div>
+              <div *ngIf="account.showPassword" class="password-display">
+                {{ account.accountPassword }}
+              </div>
+            </div>
           </div>
         </div>
       </main>
       <app-password-generator></app-password-generator>
+      <app-add-account #addAccountModal (accountAdded)="loadAccounts()"></app-add-account>
     </div>
   `,
   styles: [`
@@ -140,17 +159,99 @@ import { PasswordGeneratorComponent } from '../../components/password-generator/
       color: #666;
       margin-top: 2rem;
     }
+
+    .account-item {
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .account-info {
+      margin-bottom: 1rem;
+    }
+
+    .account-info h3 {
+      margin: 0 0 0.5rem 0;
+      color: #333;
+    }
+
+    .account-info p {
+      margin: 0;
+      color: #666;
+    }
+
+    .account-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .show-password-button {
+      padding: 0.5rem 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .show-password-button:hover {
+      background-color: #218838;
+    }
+
+    .delete-button {
+      padding: 0.5rem 1rem;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .delete-button:hover {
+      background-color: #c82333;
+    }
+
+    .password-display {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+    }
   `]
 })
 export class DashboardComponent implements OnInit {
-  hasAccounts: boolean = false;
+  accounts: (Account & { showPassword: boolean })[] = [];
   username: string = '';
 
-  constructor(private authService: AuthService) {}
+  @ViewChild('addAccountModal') addAccountModal!: AddAccountComponent;
+
+  constructor(
+    private authService: AuthService,
+    private accountService: AccountService
+  ) {}
 
   ngOnInit() {
-    // Get username from auth service
     this.username = this.authService.getUsername() || '';
+    this.loadAccounts();
+  }
+
+  loadAccounts() {
+    this.accountService.getAccounts().subscribe({
+      next: (accounts) => {
+        this.accounts = accounts.map(account => ({
+          ...account,
+          showPassword: false
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading accounts:', error);
+      }
+    });
   }
 
   logout() {
@@ -168,5 +269,26 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  deleteAccountItem(account: Account) {
+    if (confirm('Are you sure you want to delete this account?')) {
+      this.accountService.deleteAccount(account.accountID).subscribe({
+        next: () => {
+          this.loadAccounts();
+        },
+        error: (error) => {
+          console.error('Error deleting account:', error);
+        }
+      });
+    }
+  }
+
+  togglePassword(account: Account & { showPassword: boolean }) {
+    account.showPassword = !account.showPassword;
+  }
+
+  openAddAccount() {
+    this.addAccountModal.open();
   }
 } 
