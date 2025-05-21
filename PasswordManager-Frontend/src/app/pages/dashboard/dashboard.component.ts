@@ -2,29 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PasswordGeneratorComponent } from '../../components/password-generator/password-generator.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PasswordGeneratorComponent],
   template: `
     <div class="dashboard-container">
       <header class="dashboard-header">
-        <h1>Password Manager</h1>
-        <button (click)="logout()" class="logout-button">Logout</button>
+        <h1 class="title">Password Manager</h1>
+        <div class="user-profile">
+          <span class="username">{{ username }}</span>
+          <button (click)="deleteAccount()" class="delete-account-button">Delete Account</button>
+          <button (click)="logout()" class="logout-button">Logout</button>
+        </div>
       </header>
       <main class="dashboard-content">
         <div class="password-list">
-          <h2>Your Passwords</h2>
+          <h2>Your Accounts</h2>
           <div class="password-actions">
-            <button class="add-password-button">Add New Password</button>
+            <button class="add-account-button">Add New Account</button>
           </div>
           <div class="password-items">
-            <!-- Password items will be displayed here -->
-            <p class="no-passwords" *ngIf="!hasPasswords">No passwords saved yet. Add your first password!</p>
+            <!-- Account items will be displayed here -->
+            <p class="no-accounts" *ngIf="!hasAccounts">No accounts saved yet. Add your first account!</p>
           </div>
         </div>
       </main>
+      <app-password-generator></app-password-generator>
     </div>
   `,
   styles: [`
@@ -42,13 +48,26 @@ import { AuthService } from '../../services/auth.service';
       align-items: center;
     }
 
-    h1 {
+    .title {
       margin: 0;
       color: #333;
       font-size: 1.5rem;
+      text-align: center;
+      flex: 1;
     }
 
-    .logout-button {
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .username {
+      color: #666;
+      font-weight: 500;
+    }
+
+    .delete-account-button {
       padding: 0.5rem 1rem;
       background-color: #dc3545;
       color: white;
@@ -58,8 +77,22 @@ import { AuthService } from '../../services/auth.service';
       font-size: 0.875rem;
     }
 
-    .logout-button:hover {
+    .delete-account-button:hover {
       background-color: #c82333;
+    }
+
+    .logout-button {
+      padding: 0.5rem 1rem;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .logout-button:hover {
+      background-color: #5a6268;
     }
 
     .dashboard-content {
@@ -84,7 +117,7 @@ import { AuthService } from '../../services/auth.service';
       margin-bottom: 1.5rem;
     }
 
-    .add-password-button {
+    .add-account-button {
       padding: 0.75rem 1.5rem;
       background-color: #007bff;
       color: white;
@@ -94,7 +127,7 @@ import { AuthService } from '../../services/auth.service';
       font-size: 1rem;
     }
 
-    .add-password-button:hover {
+    .add-account-button:hover {
       background-color: #0056b3;
     }
 
@@ -102,7 +135,7 @@ import { AuthService } from '../../services/auth.service';
       min-height: 200px;
     }
 
-    .no-passwords {
+    .no-accounts {
       text-align: center;
       color: #666;
       margin-top: 2rem;
@@ -110,15 +143,30 @@ import { AuthService } from '../../services/auth.service';
   `]
 })
 export class DashboardComponent implements OnInit {
-  hasPasswords: boolean = false;
+  hasAccounts: boolean = false;
+  username: string = '';
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    // Initialize dashboard data
+    // Get username from auth service
+    this.username = this.authService.getUsername() || '';
   }
 
   logout() {
     this.authService.logout();
+  }
+
+  deleteAccount() {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      this.authService.deleteAccount().subscribe({
+        next: () => {
+          this.authService.logout();
+        },
+        error: (error) => {
+          console.error('Error deleting account:', error);
+        }
+      });
+    }
   }
 } 

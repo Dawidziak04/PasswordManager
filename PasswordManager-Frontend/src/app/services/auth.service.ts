@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api'; // good backend url
   private tokenKey = 'auth_token';
+  private usernameKey = 'username';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(
@@ -21,6 +22,7 @@ export class AuthService {
       tap((response: any) => {
         if (response.token) {
           localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem(this.usernameKey, username);
           this.isAuthenticatedSubject.next(true);
           this.router.navigate(['/dashboard']);
         }
@@ -38,6 +40,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.usernameKey);
     this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
@@ -46,8 +49,16 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  getUsername(): string | null {
+    return localStorage.getItem(this.usernameKey);
+  }
+
   isAuthenticated(): Observable<boolean> {
     return this.isAuthenticatedSubject.asObservable();
+  }
+
+  deleteAccount(): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/account`);
   }
 
   private hasToken(): boolean {
