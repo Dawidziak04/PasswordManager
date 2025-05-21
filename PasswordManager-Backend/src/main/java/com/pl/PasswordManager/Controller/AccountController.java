@@ -25,7 +25,6 @@ public class AccountController {
     @LoginRequired
     @GetMapping("/getAccountsByAppUserId/{appUserID}")
     public ResponseEntity<List<Account>> getAccountsByAppUser(@PathVariable int appUserID) {
-        System.out.println(appUserID);
         List<Account> dbAccount;
         try {
             dbAccount = accountService.getAccountsByAppUserID(appUserID);

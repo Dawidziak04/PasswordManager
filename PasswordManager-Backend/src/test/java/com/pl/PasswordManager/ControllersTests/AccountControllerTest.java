@@ -91,7 +91,6 @@ public class AccountControllerTest {
                 .andReturn();
 
         String json = result.getResponse().getContentAsString();
-        System.out.println("output: " + json);
         List<Account> resultList = objectMapper.readValue(json, new TypeReference<>(){});
 
         assertNotNull(resultList);
