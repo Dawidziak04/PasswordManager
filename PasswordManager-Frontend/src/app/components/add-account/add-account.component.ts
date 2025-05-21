@@ -183,7 +183,7 @@ import { AccountService, Account } from '../../services/account.service';
 })
 export class AddAccountComponent {
   isOpen = false;
-  account: Account = {
+  account: Omit<Account, 'accountID'> = {
     accountName: '',
     accountEmail: '',
     accountPassword: ''
