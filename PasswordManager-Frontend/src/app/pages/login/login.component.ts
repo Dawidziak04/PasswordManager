@@ -14,18 +14,17 @@ import { AuthService } from '../../services/auth.service';
         <h2>Login</h2>
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="username">Username</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              [(ngModel)]="email"
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
               required
-              email
-              #emailInput="ngModel"
+              #usernameInput="ngModel"
             />
-            <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="error-message">
-              Please enter a valid email address
+            <div *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" class="error-message">
+              Please enter your username
             </div>
           </div>
           <div class="form-group">
@@ -36,11 +35,10 @@ import { AuthService } from '../../services/auth.service';
               name="password"
               [(ngModel)]="password"
               required
-              minlength="8"
               #passwordInput="ngModel"
             />
             <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="error-message">
-              Password must be at least 8 characters long
+              Please enter your password
             </div>
           </div>
           <button type="submit" [disabled]="loginForm.invalid">Login</button>
@@ -142,14 +140,14 @@ import { AuthService } from '../../services/auth.service';
   `]
 })
 export class LoginComponent {
-  email: string = '';
+  username: string = '';
   password: string = '';
 
   constructor(private authService: AuthService) {}
 
   onSubmit() {
-    if (this.email && this.password) {
-      this.authService.login(this.email, this.password).subscribe({
+    if (this.username && this.password) {
+      this.authService.login(this.username, this.password).subscribe({
         next: () => {
           // Navigation will be handled by the auth service
         },

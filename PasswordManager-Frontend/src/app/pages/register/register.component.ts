@@ -14,18 +14,17 @@ import { AuthService } from '../../services/auth.service';
         <h2>Register</h2>
         <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="username">Username</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              [(ngModel)]="email"
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
               required
-              email
-              #emailInput="ngModel"
+              #usernameInput="ngModel"
             />
-            <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="error-message">
-              Please enter a valid email address
+            <div *ngIf="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)" class="error-message">
+              Please enter a username
             </div>
           </div>
           <div class="form-group">
@@ -36,11 +35,10 @@ import { AuthService } from '../../services/auth.service';
               name="password"
               [(ngModel)]="password"
               required
-              minlength="8"
               #passwordInput="ngModel"
             />
             <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="error-message">
-              Password must be at least 8 characters long
+              Please enter your password
             </div>
           </div>
           <div class="form-group">
@@ -159,15 +157,15 @@ import { AuthService } from '../../services/auth.service';
   `]
 })
 export class RegisterComponent {
-  email: string = '';
+  username: string = '';
   password: string = '';
   confirmPassword: string = '';
 
   constructor(private authService: AuthService) {}
 
   onSubmit() {
-    if (this.email && this.password && this.password === this.confirmPassword) {
-      this.authService.register(this.email, this.password).subscribe({
+    if (this.username && this.password && this.password === this.confirmPassword) {
+      this.authService.register(this.username, this.password).subscribe({
         next: () => {
           // Navigation will be handled by the auth service
         },
