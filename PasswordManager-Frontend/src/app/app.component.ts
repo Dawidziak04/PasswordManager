@@ -1,12 +1,24 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: `
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  `,
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, CommonModule],
+  styles: [`
+    main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'PasswordManager-Frontend';
+  title = 'Password Manager';
 }
