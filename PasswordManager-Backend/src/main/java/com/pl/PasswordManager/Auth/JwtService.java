@@ -5,7 +5,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +30,12 @@ public class JwtService {
 
     public String generateToken(AppUser appUser) {
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("appUserID", appUser.getAppUserID());
 
         return Jwts.builder()
-                .claims()
-                .add(claims)
+                .claim("appUserID", appUser.getAppUserID())
                 .subject(appUser.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 60 ))
-                .and()
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60))
                 .signWith(getKey())
                 .compact();
 
@@ -49,6 +44,11 @@ public class JwtService {
     private SecretKey getKey(){
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public int extractID(String token) {
+        Claims claims = extractAllClaims(token);
+        return ((Number) claims.get("appUserID")).intValue();
     }
 
 
@@ -67,6 +67,7 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
+
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()

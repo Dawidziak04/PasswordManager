@@ -47,6 +47,8 @@ public class AppUserService {
                             (appUser.getUsername(), appUser.getPassword()
                             ));
             if (authentication.isAuthenticated()) {
+                AppUser appUserForID = appUserRepository.findByUsername(appUser.getUsername());
+                appUser.setAppUserID(appUserForID.getAppUserID());
                 return jwtService.generateToken(appUser);
             }
             else {
