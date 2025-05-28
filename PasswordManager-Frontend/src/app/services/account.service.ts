@@ -10,7 +10,7 @@ export interface Account {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
   private apiUrl = 'http://localhost:8080/api';
@@ -22,10 +22,10 @@ export class AccountService {
   }
 
   getAccounts(): Observable<Account[]> {
-    return this.http.get<Account[]>(`${this.apiUrl}/accounts`);
+    return this.http.get<Account[]>(`${this.apiUrl}/getAccountsByAppUserId`);
   }
 
-  deleteAccount(accountId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/accounts/${accountId}`);
-  }
-} 
+  // deleteAccount(account: Omit<Account, 'accountID'>): Observable<Account> {
+  //   return this.http.delete<Account>(`${this.apiUrl}/deleteAccount`, account);
+  // }
+}

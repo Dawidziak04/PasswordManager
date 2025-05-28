@@ -7,43 +7,80 @@
   <div class="main-content">
     <div class="password-list">
       <div class="add-password-section">
-        <h2>{{ editingPassword ? 'Edit Password' : 'Add New Password' }}</h2>
-        <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="password-form">
+        <h2>{{ editingPassword ? "Edit Account" : "Add New Account" }}</h2>
+        <form
+          [formGroup]="passwordForm"
+          (ngSubmit)="onSubmit()"
+          class="password-form"
+        >
           <div class="form-group">
             <label for="title">Title</label>
-            <input type="text" id="title" formControlName="title" placeholder="Enter title">
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              placeholder="Enter title"
+            />
           </div>
 
           <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" id="username" formControlName="username" placeholder="Enter username">
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              placeholder="Enter username"
+            />
           </div>
 
           <div class="form-group">
             <label for="password">Password</label>
             <div class="password-input-group">
-              <input [type]="showPassword['new'] ? 'text' : 'password'" id="password" formControlName="password" placeholder="Enter password">
-              <button type="button" class="toggle-password" (click)="togglePasswordVisibility('new')">
-                {{ showPassword['new'] ? 'Hide' : 'Show' }}
+              <input
+                [type]="showPassword['new'] ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                placeholder="Enter password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility('new')"
+              >
+                {{ showPassword["new"] ? "Hide" : "Show" }}
               </button>
             </div>
           </div>
 
           <div class="form-group">
             <label for="url">URL (optional)</label>
-            <input type="url" id="url" formControlName="url" placeholder="Enter URL">
+            <input
+              type="url"
+              id="url"
+              formControlName="url"
+              placeholder="Enter URL"
+            />
           </div>
 
           <div class="form-group">
             <label for="notes">Notes (optional)</label>
-            <textarea id="notes" formControlName="notes" placeholder="Enter notes"></textarea>
+            <textarea
+              id="notes"
+              formControlName="notes"
+              placeholder="Enter notes"
+            ></textarea>
           </div>
 
           <div class="form-actions">
             <button type="submit" [disabled]="passwordForm.invalid">
-              {{ editingPassword ? 'Update' : 'Add' }} Password
+              {{ editingPassword ? "Update" : "Add" }} Password
             </button>
-            <button type="button" class="secondary" (click)="resetForm()" *ngIf="editingPassword">
+            <button
+              type="button"
+              class="secondary"
+              (click)="resetForm()"
+              *ngIf="editingPassword"
+            >
               Cancel
             </button>
           </div>
@@ -57,8 +94,15 @@
             <div class="password-header">
               <h3>{{ password.title }}</h3>
               <div class="password-actions">
-                <button class="icon-btn" (click)="editPassword(password)">Edit</button>
-                <button class="icon-btn delete" (click)="deletePassword(password.id)">Delete</button>
+                <button class="icon-btn" (click)="editPassword(password)">
+                  Edit
+                </button>
+                <button
+                  class="icon-btn delete"
+                  (click)="deletePassword(password.id)"
+                >
+                  Delete
+                </button>
               </div>
             </div>
             <div class="password-details">
@@ -66,14 +110,24 @@
               <p>
                 <strong>Password:</strong>
                 <span class="password-field">
-                  {{ showPassword[password.id] ? password.password : '••••••••' }}
-                  <button class="toggle-password" (click)="togglePasswordVisibility(password.id)">
-                    {{ showPassword[password.id] ? 'Hide' : 'Show' }}
+                  {{
+                    showPassword[password.id] ? password.password : "••••••••"
+                  }}
+                  <button
+                    class="toggle-password"
+                    (click)="togglePasswordVisibility(password.id)"
+                  >
+                    {{ showPassword[password.id] ? "Hide" : "Show" }}
                   </button>
                 </span>
               </p>
-              <p *ngIf="password.url"><strong>URL:</strong> <a [href]="password.url" target="_blank">{{ password.url }}</a></p>
-              <p *ngIf="password.notes"><strong>Notes:</strong> {{ password.notes }}</p>
+              <p *ngIf="password.url">
+                <strong>URL:</strong>
+                <a [href]="password.url" target="_blank">{{ password.url }}</a>
+              </p>
+              <p *ngIf="password.notes">
+                <strong>Notes:</strong> {{ password.notes }}
+              </p>
             </div>
           </div>
         </div>
@@ -86,47 +140,64 @@
       </button>
       <div class="generator-content">
         <h3>Password Generator</h3>
-        <form [formGroup]="generatorForm" (ngSubmit)="generatePassword()" class="generator-form">
+        <form
+          [formGroup]="generatorForm"
+          (ngSubmit)="generatePassword()"
+          class="generator-form"
+        >
           <div class="form-group">
             <label for="length">Password Length</label>
-            <input type="number" id="length" formControlName="length" min="8" max="64">
+            <input
+              type="number"
+              id="length"
+              formControlName="length"
+              min="8"
+              max="64"
+            />
           </div>
 
           <div class="form-group checkbox">
             <label>
-              <input type="checkbox" formControlName="includeUppercase">
+              <input type="checkbox" formControlName="includeUppercase" />
               Include Uppercase Letters
             </label>
           </div>
 
           <div class="form-group checkbox">
             <label>
-              <input type="checkbox" formControlName="includeLowercase">
+              <input type="checkbox" formControlName="includeLowercase" />
               Include Lowercase Letters
             </label>
           </div>
 
           <div class="form-group checkbox">
             <label>
-              <input type="checkbox" formControlName="includeNumbers">
+              <input type="checkbox" formControlName="includeNumbers" />
               Include Numbers
             </label>
           </div>
 
           <div class="form-group checkbox">
             <label>
-              <input type="checkbox" formControlName="includeSpecial">
+              <input type="checkbox" formControlName="includeSpecial" />
               Include Special Characters
             </label>
           </div>
 
-          <button type="submit" [disabled]="generatorForm.invalid">Generate Password</button>
+          <button type="submit" [disabled]="generatorForm.invalid">
+            Generate Password
+          </button>
 
           <div class="generated-password" *ngIf="generatedPassword">
             <p>Generated Password:</p>
             <div class="password-display">
               {{ generatedPassword }}
-              <button class="copy-btn" (click)="passwordForm.patchValue({ password: generatedPassword })">
+              <button
+                class="copy-btn"
+                (click)="
+                  passwordForm.patchValue({ password: generatedPassword })
+                "
+              >
                 Use
               </button>
             </div>
@@ -135,4 +206,4 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
