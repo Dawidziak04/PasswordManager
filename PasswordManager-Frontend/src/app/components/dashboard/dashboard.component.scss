@@ -1,6 +1,15 @@
 .dashboard-container {
   min-height: 100vh;
-  background: #f5f7fa;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(
+    circle at top,
+    #a18cd1 0%,
+    #fbc2eb 40%,
+    #2d1e4a 100%
+  );
+  color: #c3b3d8;
+  margin: 0;
+  padding: 0;
 }
 
 .dashboard-header {
@@ -74,7 +83,8 @@
       font-size: 0.9rem;
     }
 
-    input, textarea {
+    input,
+    textarea {
       padding: 0.8rem;
       border: 1px solid #e2e8f0;
       border-radius: 5px;
@@ -398,4 +408,4 @@
       }
     }
   }
-} 
+}

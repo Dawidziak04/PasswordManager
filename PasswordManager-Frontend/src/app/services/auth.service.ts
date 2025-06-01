@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api'; // good backend url
-  private tokenKey = 'auth_token';
+  private tokenKey = 'token';
   private usernameKey = 'username';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 
@@ -53,20 +53,26 @@ export class AuthService {
     return localStorage.getItem(this.usernameKey);
   }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.isAuthenticatedSubject.asObservable();
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 
   deleteAccount(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/account`);
+    return this.http.delete(`${this.apiUrl}/deleteAccount`, {
+      headers: this.getHeaders()
+    });
+  }
+
+  private getHeaders(): HttpHeaders {
+    const token = this.getToken();
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
   private hasToken(): boolean {
     return !!this.getToken();
   }
 
-  handleAuthError(): void {
+  handleAuthError() {
     this.logout();
-    this.router.navigate(['/login']);
   }
 } 

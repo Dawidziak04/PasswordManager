@@ -10,14 +10,16 @@ import { CommonModule } from '@angular/common';
     </main>
   `,
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CommonModule],
-  styles: [`
-    main {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-  `]
+  imports: [RouterOutlet, CommonModule],
+  styles: [
+    `
+      main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'Password Manager';

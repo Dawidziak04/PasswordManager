@@ -72,49 +72,65 @@ import { AuthService } from '../../services/auth.service';
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #f5f5f5;
+      background: radial-gradient(circle at top, #a18cd1 0%, #fbc2eb 40%, #2d1e4a 100%);
+      padding: 20px;
     }
 
     .register-box {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 2.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
       width: 100%;
       max-width: 400px;
+      animation: fadeIn 0.5s ease-out;
     }
 
     h2 {
       text-align: center;
       margin-bottom: 2rem;
-      color: #333;
+      color: white;
+      font-weight: 600;
+      font-size: 2rem;
     }
 
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     label {
       display: block;
       margin-bottom: 0.5rem;
-      color: #666;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
     }
 
     input {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
       font-size: 1rem;
+      color: white;
+      transition: all 0.3s ease;
     }
 
     input:focus {
       outline: none;
-      border-color: #007bff;
+      border-color: #a18cd1;
+      box-shadow: 0 0 0 2px rgba(161, 140, 209, 0.2);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
     }
 
     .error-message {
-      color: #dc3545;
+      color: #ff6b6b;
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
@@ -122,36 +138,42 @@ import { AuthService } from '../../services/auth.service';
     button {
       width: 100%;
       padding: 0.75rem;
-      background-color: #007bff;
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
       margin-top: 1rem;
+      transition: all 0.3s ease;
     }
 
     button:disabled {
-      background-color: #ccc;
+      background: rgba(255, 255, 255, 0.1);
       cursor: not-allowed;
     }
 
     button:hover:not(:disabled) {
-      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(161, 140, 209, 0.4);
     }
 
     .login-link {
       text-align: center;
-      margin-top: 1rem;
-      color: #666;
+      margin-top: 1.5rem;
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .login-link a {
-      color: #007bff;
+      color: white;
       text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .login-link a:hover {
+      color: #fbc2eb;
       text-decoration: underline;
     }
   `]
