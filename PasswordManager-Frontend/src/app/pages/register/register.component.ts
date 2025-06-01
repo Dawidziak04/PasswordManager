@@ -11,14 +11,14 @@ import { ThemeService } from '../../services/theme.service';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="register-container">
+      <div class="theme-toggle-container">
+        <button class="theme-toggle" (click)="toggleTheme()">
+          <i class="material-icons">{{
+            currentTheme === 'astral' ? 'dark_mode' : 'light_mode'
+          }}</i>
+        </button>
+      </div>
       <div class="register-card">
-        <div class="theme-toggle-container">
-          <button class="theme-toggle" (click)="toggleTheme()">
-            <i class="material-icons">{{
-              currentTheme === 'astral' ? 'dark_mode' : 'light_mode'
-            }}</i>
-          </button>
-        </div>
         <h1>Register</h1>
         <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
           <div class="form-group">
@@ -87,6 +87,7 @@ import { ThemeService } from '../../services/theme.service';
       align-items: center;
       background: var(--theme-bg);
       padding: 2rem;
+      position: relative;
     }
 
     .register-card {
@@ -102,9 +103,10 @@ import { ThemeService } from '../../services/theme.service';
     }
 
     .theme-toggle-container {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
+      position: fixed;
+      top: 1.5rem;
+      right: 2rem;
+      z-index: 1000;
     }
 
     .theme-toggle {
