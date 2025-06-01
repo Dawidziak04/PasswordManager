@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PasswordGeneratorComponent } from '../../components/password-generator/password-generator.component';
 import { AddAccountComponent } from '../../components/add-account/add-account.component';

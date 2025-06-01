@@ -87,12 +87,24 @@ public class AccountController {
 
     @LoginRequired
     @PutMapping("/updateAccount")
-    public ResponseEntity<Account> updateAccount(@RequestBody Account account) {
+    public ResponseEntity<Account> updateAccount(@RequestBody AccountDTO accountDTO,
+                                                 @RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replace("Bearer ", "");
+        Optional<AppUser> appUser = appUserRepository.findById(jwtService.extractID(token));
+
+        Account account = new Account();
+        appUser.ifPresent(account::setAppUserProfileID);
+        account.setAccountName(accountDTO.getAccountName());
+        account.setAccountEmail(accountDTO.getAccountEmail());
+        account.setAccountPassword(accountDTO.getAccountPassword());
+
         if (account.getAccountName() == null ||
                 account.getAccountEmail() == null ||
                 account.getAccountPassword() == null) {
             return ResponseEntity.badRequest().body(null);
         }
+
         Account updatedAccount;
 
         try {
