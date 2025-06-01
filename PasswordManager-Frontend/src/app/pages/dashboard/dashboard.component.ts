@@ -59,6 +59,9 @@ import { ThemeService } from '../../services/theme.service';
                 >
                   {{ account.showPassword ? 'Hide' : 'Show' }} Password
                 </button>
+                <button class="update-button" (click)="updateAccount(account)">
+                  Update
+                </button>
                 <button
                   class="delete-button"
                   (click)="deleteAccountItem(account)"
@@ -80,6 +83,7 @@ import { ThemeService } from '../../services/theme.service';
       <app-add-account
         #addAccountModal
         (accountAdded)="loadAccounts()"
+        (accountUpdated)="onAccountUpdated($event)"
       ></app-add-account>
     </div>
   `,
@@ -351,6 +355,27 @@ import { ThemeService } from '../../services/theme.service';
         box-shadow: 0 4px 15px var(--theme-primary);
       }
 
+      .update-button {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--theme-primary) 0%,
+          var(--theme-secondary) 100%
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .update-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px var(--theme-primary);
+      }
+
       .delete-button {
         padding: 0.75rem 1.5rem;
         background: linear-gradient(
@@ -469,18 +494,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateAccount(account: Account) {
-    this.accountService.updateAccount(account).subscribe({
-      next: (updatedAccount) => {
-        console.log('Account updated:', updatedAccount);
-        this.loadAccounts();
-      },
-      error: (error) => {
-        console.error('Error updating account:', error);
-        if (error.status === 401) {
-          this.authService.handleAuthError();
-        }
-      },
-    });
+    this.addAccountModal.open(account);
   }
 
   togglePassword(account: Account & { showPassword: boolean }) {
@@ -497,5 +511,21 @@ export class DashboardComponent implements OnInit {
 
   onPasswordGenerated(password: string) {
     console.log('Generated password:', password);
+  }
+
+  onAccountUpdated(updatedAccount: Account) {
+    console.log('Account updated:', updatedAccount);
+    this.accountService.updateAccount(updatedAccount).subscribe({
+      next: (response) => {
+        console.log('Account updated:', response);
+        this.loadAccounts();
+      },
+      error: (error) => {
+        console.error('Error updating account:', error);
+        if (error.status === 401) {
+          this.authService.handleAuthError();
+        }
+      },
+    });
   }
 }

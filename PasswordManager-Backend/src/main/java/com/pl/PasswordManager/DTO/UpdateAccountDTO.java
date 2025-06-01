@@ -7,10 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-    public class AccountDTO {
+public class UpdateAccountDTO {
 
-        private String accountName;
-        private String accountEmail;
-        private String accountPassword;
+    private int accountID;
+    private String accountName;
+    private String accountEmail;
+    private String accountPassword;
 
-    }
+
+}

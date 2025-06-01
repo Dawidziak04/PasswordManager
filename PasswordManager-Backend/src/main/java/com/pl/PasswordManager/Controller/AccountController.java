@@ -4,6 +4,7 @@ package com.pl.PasswordManager.Controller;
 import com.pl.PasswordManager.Auth.JwtService;
 import com.pl.PasswordManager.Auth.LoginRequired;
 import com.pl.PasswordManager.DTO.AccountDTO;
+import com.pl.PasswordManager.DTO.UpdateAccountDTO;
 import com.pl.PasswordManager.Entities.Account;
 import com.pl.PasswordManager.Entities.AppUser;
 import com.pl.PasswordManager.Repository.AppUserRepository;
@@ -87,17 +88,18 @@ public class AccountController {
 
     @LoginRequired
     @PutMapping("/updateAccount")
-    public ResponseEntity<Account> updateAccount(@RequestBody AccountDTO accountDTO,
+    public ResponseEntity<Account> updateAccount(@RequestBody UpdateAccountDTO updateAccountDTO,
                                                  @RequestHeader("Authorization") String authHeader) {
 
         String token = authHeader.replace("Bearer ", "");
         Optional<AppUser> appUser = appUserRepository.findById(jwtService.extractID(token));
 
         Account account = new Account();
+        account.setAccountID(updateAccountDTO.getAccountID());
         appUser.ifPresent(account::setAppUserProfileID);
-        account.setAccountName(accountDTO.getAccountName());
-        account.setAccountEmail(accountDTO.getAccountEmail());
-        account.setAccountPassword(accountDTO.getAccountPassword());
+        account.setAccountName(updateAccountDTO.getAccountName());
+        account.setAccountEmail(updateAccountDTO.getAccountEmail());
+        account.setAccountPassword(updateAccountDTO.getAccountPassword());
 
         if (account.getAccountName() == null ||
                 account.getAccountEmail() == null ||

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService, Account } from '../../services/account.service';
@@ -8,13 +8,10 @@ import { AccountService, Account } from '../../services/account.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="modal" [class.show]="isOpen">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Add New Account</h2>
-          <button class="close-button" (click)="close()">×</button>
-        </div>
-        <form (ngSubmit)="onSubmit()" #accountForm="ngForm">
+    <div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>{{ isEditMode ? 'Edit Account' : 'Add New Account' }}</h2>
+        <form (ngSubmit)="onSubmit()" #addForm="ngForm">
           <div class="form-group">
             <label for="accountName">Account Name</label>
             <input
@@ -26,7 +23,7 @@ import { AccountService, Account } from '../../services/account.service';
               #accountNameInput="ngModel"
             />
             <div *ngIf="accountNameInput.invalid && (accountNameInput.dirty || accountNameInput.touched)" class="error-message">
-              Please enter an account name
+              Please enter account name
             </div>
           </div>
           <div class="form-group">
@@ -37,185 +34,252 @@ import { AccountService, Account } from '../../services/account.service';
               name="accountEmail"
               [(ngModel)]="account.accountEmail"
               required
-              email
               #accountEmailInput="ngModel"
             />
             <div *ngIf="accountEmailInput.invalid && (accountEmailInput.dirty || accountEmailInput.touched)" class="error-message">
-              Please enter a valid email address
+              Please enter a valid email
             </div>
           </div>
           <div class="form-group">
             <label for="accountPassword">Password</label>
-            <input
-              type="password"
-              id="accountPassword"
-              name="accountPassword"
-              [(ngModel)]="account.accountPassword"
-              required
-              #accountPasswordInput="ngModel"
-            />
+            <div class="password-input-container">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="accountPassword"
+                name="accountPassword"
+                [(ngModel)]="account.accountPassword"
+                required
+                #accountPasswordInput="ngModel"
+              />
+              <button type="button" class="toggle-password" (click)="togglePassword()">
+                <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+              </button>
+            </div>
             <div *ngIf="accountPasswordInput.invalid && (accountPasswordInput.dirty || accountPasswordInput.touched)" class="error-message">
-              Please enter a password
+              Please enter password
             </div>
           </div>
-          <div class="form-actions">
+          <div class="button-group">
             <button type="button" class="cancel-button" (click)="close()">Cancel</button>
-            <button type="submit" [disabled]="accountForm.invalid">Add Account</button>
+            <button type="submit" [disabled]="addForm.invalid">
+              {{ isEditMode ? 'Update' : 'Add Account' }}
+            </button>
           </div>
         </form>
       </div>
     </div>
   `,
   styles: [`
-    .modal {
-      display: none;
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-    }
-
-    .modal.show {
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
 
     .modal-content {
-      background: white;
+      background: var(--theme-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 2rem;
-      border-radius: 8px;
-      width: 100%;
+      border-radius: 16px;
+      border: 1px solid var(--theme-border);
+      width: 90%;
       max-width: 500px;
-      position: relative;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
+      animation: fadeIn 0.3s ease-out;
     }
 
     h2 {
-      margin: 0;
-      color: #333;
-    }
-
-    .close-button {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #666;
+      margin: 0 0 1.5rem 0;
+      color: var(--theme-text);
+      font-weight: 600;
     }
 
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
 
     label {
       display: block;
       margin-bottom: 0.5rem;
-      color: #666;
+      color: var(--theme-text);
+      font-weight: 500;
+    }
+
+    .password-input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
     }
 
     input {
       width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      background: var(--theme-glass);
+      border: 1px solid var(--theme-border);
+      border-radius: 8px;
       font-size: 1rem;
+      color: var(--theme-text);
+      transition: all 0.3s ease;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      padding: 0.5rem;
+      cursor: pointer;
+      color: var(--theme-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: var(--theme-primary);
+    }
+
+    .toggle-password i {
+      font-size: 1.2rem;
     }
 
     input:focus {
       outline: none;
-      border-color: #007bff;
+      border-color: var(--theme-primary);
+      box-shadow: 0 0 0 2px var(--theme-primary);
     }
 
     .error-message {
-      color: #dc3545;
+      color: var(--theme-accent);
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
 
-    .form-actions {
+    .button-group {
       display: flex;
       gap: 1rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
     }
 
     button {
       flex: 1;
       padding: 0.75rem;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     button[type="submit"] {
-      background-color: #007bff;
+      background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
       color: white;
     }
 
     button[type="submit"]:disabled {
-      background-color: #ccc;
+      background: var(--theme-glass);
       cursor: not-allowed;
     }
 
     button[type="submit"]:not(:disabled):hover {
-      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--theme-primary);
     }
 
     .cancel-button {
-      background-color: #6c757d;
-      color: white;
+      background: var(--theme-glass);
+      color: var(--theme-text);
+      border: 1px solid var(--theme-border);
     }
 
     .cancel-button:hover {
-      background-color: #5a6268;
+      background: var(--theme-glass);
+      opacity: 0.8;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   `]
 })
 export class AddAccountComponent {
   isOpen = false;
-  account: Omit<Account, 'accountID'> = {
+  isEditMode = false;
+  showPassword = false;
+  @Output() accountAdded = new EventEmitter<void>();
+  @Output() accountUpdated = new EventEmitter<Account>();
+
+  account: Account = {
+    accountID: 0,
     accountName: '',
     accountEmail: '',
     accountPassword: ''
   };
 
-  @Output() accountAdded = new EventEmitter<void>();
-
   constructor(private accountService: AccountService) {}
 
-  open() {
+  open(account?: Account) {
     this.isOpen = true;
+    this.isEditMode = !!account;
+    if (account) {
+      this.account = { ...account };
+      this.showPassword = true;
+    } else {
+      this.resetForm();
+    }
   }
 
   close() {
     this.isOpen = false;
+    this.isEditMode = false;
+    this.showPassword = false;
     this.resetForm();
   }
 
   private resetForm() {
     this.account = {
+      accountID: 0,
       accountName: '',
       accountEmail: '',
       accountPassword: ''
     };
   }
 
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
   onSubmit() {
-    if (this.account.accountName && this.account.accountEmail && this.account.accountPassword) {
-      this.accountService.addAccount(this.account).subscribe({
+    if (this.isEditMode) {
+      this.accountUpdated.emit(this.account);
+      this.close();
+    } else {
+      const newAccount: Omit<Account, 'accountID'> = {
+        accountName: this.account.accountName,
+        accountEmail: this.account.accountEmail,
+        accountPassword: this.account.accountPassword
+      };
+      
+      this.accountService.addAccount(newAccount).subscribe({
         next: () => {
-          this.close();
           this.accountAdded.emit();
+          this.close();
         },
         error: (error) => {
           console.error('Error adding account:', error);
