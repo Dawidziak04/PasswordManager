@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 export type Theme = 'astral' | 'violet';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private theme = new BehaviorSubject<Theme>('astral');
@@ -19,7 +19,7 @@ export class ThemeService {
   }
 
   toggleTheme() {
-    const newTheme = this.theme.value === 'astral' ? 'violet' : 'astral';
+    const newTheme = this.theme.value === 'violet' ? 'astral' : 'violet';
     this.theme.next(newTheme);
     localStorage.setItem('theme', newTheme);
   }
@@ -27,4 +27,4 @@ export class ThemeService {
   getCurrentTheme(): Theme {
     return this.theme.value;
   }
-} 
+}

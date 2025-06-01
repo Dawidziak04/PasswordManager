@@ -15,10 +15,6 @@ import { ThemeService } from '../../services/theme.service';
     <div class="dashboard-container">
       <header class="dashboard-header">
         <div class="header-left">
-          <button class="theme-toggle" (click)="toggleTheme()">
-            <i class="material-icons">{{ currentTheme === 'astral' ? 'dark_mode' : 'light_mode' }}</i>
-            <span>{{ currentTheme === 'astral' ? 'Dark Mode' : 'Light Mode' }}</span>
-          </button>
           <span class="username">{{ username }}</span>
         </div>
         <h1 class="title">Password Manager</h1>
@@ -27,6 +23,11 @@ import { ThemeService } from '../../services/theme.service';
             Delete Account
           </button>
           <button (click)="logout()" class="logout-button">Logout</button>
+          <button class="theme-toggle" (click)="toggleTheme()">
+            <i class="material-icons">{{
+              currentTheme === 'astral' ? 'dark_mode' : 'light_mode'
+            }}</i>
+          </button>
         </div>
       </header>
       <main class="dashboard-content">
@@ -36,7 +37,10 @@ import { ThemeService } from '../../services/theme.service';
             <button class="add-account-button" (click)="openAddAccount()">
               Add New Account
             </button>
-            <button class="generate-password-button" (click)="openPasswordGenerator()">
+            <button
+              class="generate-password-button"
+              (click)="openPasswordGenerator()"
+            >
               Generate Password
             </button>
           </div>
@@ -103,8 +107,52 @@ import { ThemeService } from '../../services/theme.service';
       .header-left {
         display: flex;
         align-items: center;
-        gap: 1rem;
         justify-content: flex-start;
+      }
+
+      .user-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .username {
+        color: var(--theme-text);
+        font-weight: 500;
+        font-size: 1.1rem;
+      }
+
+      .theme-toggle {
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        background: var(--theme-glass);
+        border: 1px solid var(--theme-border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--theme-text);
+      }
+
+      .theme-toggle:hover {
+        transform: translateY(-50%) translateY(-2px);
+        background: var(--theme-primary);
+        color: white;
+      }
+
+      .theme-toggle i {
+        font-size: 1.2rem;
+      }
+
+      .theme-toggle span {
+        display: none;
       }
 
       .header-right {
@@ -112,6 +160,7 @@ import { ThemeService } from '../../services/theme.service';
         align-items: center;
         gap: 1rem;
         justify-content: flex-end;
+        margin-right: 60px;
       }
 
       .title {
@@ -123,15 +172,13 @@ import { ThemeService } from '../../services/theme.service';
         grid-column: 2;
       }
 
-      .username {
-        color: var(--theme-text);
-        font-weight: 500;
-        font-size: 1.1rem;
-      }
-
       .delete-account-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-accent) 0%, #ff8e8e 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-accent) 0%,
+          #ff8e8e 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -148,7 +195,11 @@ import { ThemeService } from '../../services/theme.service';
 
       .logout-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-primary) 0%,
+          var(--theme-secondary) 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -161,42 +212,6 @@ import { ThemeService } from '../../services/theme.service';
       .logout-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 15px var(--theme-primary);
-      }
-
-      .theme-toggle {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: var(--theme-glass);
-        border: 1px solid var(--theme-border);
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        color: var(--theme-text);
-        order: -1;
-      }
-
-      .theme-toggle:hover {
-        transform: translateY(-2px);
-        background: var(--theme-primary);
-        color: white;
-      }
-
-      .theme-toggle i {
-        font-size: 1.1rem;
-      }
-
-      .theme-toggle span {
-        display: none;
-      }
-
-      @media (min-width: 768px) {
-        .theme-toggle span {
-          display: inline;
-        }
       }
 
       .dashboard-content {
@@ -229,7 +244,11 @@ import { ThemeService } from '../../services/theme.service';
 
       .add-account-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-primary) 0%,
+          var(--theme-secondary) 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -246,7 +265,11 @@ import { ThemeService } from '../../services/theme.service';
 
       .generate-password-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-primary) 0%,
+          var(--theme-secondary) 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -310,7 +333,11 @@ import { ThemeService } from '../../services/theme.service';
 
       .show-password-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-primary) 0%, var(--theme-secondary) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-primary) 0%,
+          var(--theme-secondary) 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -327,7 +354,11 @@ import { ThemeService } from '../../services/theme.service';
 
       .delete-button {
         padding: 0.75rem 1.5rem;
-        background: linear-gradient(135deg, var(--theme-accent) 0%, #ff8e8e 100%);
+        background: linear-gradient(
+          135deg,
+          var(--theme-accent) 0%,
+          #ff8e8e 100%
+        );
         color: white;
         border: none;
         border-radius: 8px;
@@ -361,7 +392,8 @@ export class DashboardComponent implements OnInit {
   currentTheme: 'astral' | 'violet' = 'astral';
 
   @ViewChild('addAccountModal') addAccountModal!: AddAccountComponent;
-  @ViewChild('passwordGenerator') passwordGenerator!: PasswordGeneratorComponent;
+  @ViewChild('passwordGenerator')
+  passwordGenerator!: PasswordGeneratorComponent;
 
   constructor(
     private authService: AuthService,
@@ -372,7 +404,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.username = this.authService.getUsername() || '';
     this.loadAccounts();
-    this.themeService.theme$.subscribe(theme => {
+    this.themeService.theme$.subscribe((theme) => {
       this.currentTheme = theme;
       document.documentElement.setAttribute('data-theme', theme);
     });
@@ -432,7 +464,7 @@ export class DashboardComponent implements OnInit {
           if (error.status === 401) {
             this.authService.handleAuthError();
           }
-        }
+        },
       });
     }
   }
@@ -448,7 +480,7 @@ export class DashboardComponent implements OnInit {
         if (error.status === 401) {
           this.authService.handleAuthError();
         }
-      }
+      },
     });
   }
 
